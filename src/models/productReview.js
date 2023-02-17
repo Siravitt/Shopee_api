@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       rating: {
-        type: DataTypes.ENUM([0, 1, 2, 3, 4, 5]),
+        type: DataTypes.ENUM(["1", "2", "3", "4", "5"]),
       },
     },
     {
