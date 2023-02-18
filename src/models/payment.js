@@ -21,5 +21,16 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Payment.associate = (db) => {
+    Payment.belongsTo(db.Order, {
+      foreignKey: {
+        name: "orderId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Payment;
 };

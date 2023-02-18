@@ -37,5 +37,23 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Shop.associate = (db) => {
+    Shop.hasMany(db.Product, {
+      foreignKey: {
+        name: "shopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Shop.hasMany(db.Chat, {
+      foreignKey: {
+        name: "shopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Shop;
 };

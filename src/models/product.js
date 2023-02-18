@@ -29,5 +29,51 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Product.associate = (db) => {
+    Product.hasMany(db.ProductPicture, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Product.belongsTo(db.Category, {
+      foreignKey: {
+        name: "categoryId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Product.hasMany(db.Cart, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Product.hasMany(db.ProductReview, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Product.belongsTo(db.Shop, {
+      foreignKey: {
+        name: "shopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Product.hasMany(db.OrderItem, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Product;
 };

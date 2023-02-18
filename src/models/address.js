@@ -9,6 +9,21 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      receiverName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      receiverPhone: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -49,5 +64,26 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Address.associate = (db) => {
+    Address.belongsTo(db.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
+  Address.associate = (db) => {
+    Address.hasMany(db.Order, {
+      foreignKey: {
+        name: "addressId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Address;
 };

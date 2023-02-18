@@ -15,5 +15,16 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  ProductPicture.associate = (db) => {
+    ProductPicture.belongsTo(db.Product, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return ProductPicture;
 };

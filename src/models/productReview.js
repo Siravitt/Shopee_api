@@ -13,5 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  ProductReview.associate = (db) => {
+    ProductReview.belongsTo(db.Product, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return ProductReview;
 };

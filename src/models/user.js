@@ -52,5 +52,30 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  User.associate = (db) => {
+    User.hasMany(db.Chat, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    User.hasMany(db.Address, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    User.hasMany(db.Cart, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return User;
 };

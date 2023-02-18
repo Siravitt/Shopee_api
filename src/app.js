@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const app = express();
 const http = require("http");
@@ -12,10 +13,11 @@ const notFoundMiddleware = require("./middlewares/notFound");
 // const { sequelize } = require("./models");
 // sequelize.sync({ force: true });
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/user", authUserRoute);
-app.use("/shop", authShopRoute)
+app.use("/shop", authShopRoute);
 
 app.use(errorMiddleware);
 app.use(notFoundMiddleware);
