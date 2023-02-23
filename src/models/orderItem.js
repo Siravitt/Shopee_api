@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
-    OrderItem.belongsTo(db.Order, {
+    OrderItem.belongsTo(db.OrderShop, {
       foreignKey: {
-        name: "orderId",
+        name: "orderShopId",
         allowNull: false,
       },
       onDelete: "RESTRICT",

@@ -53,6 +53,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
+    Shop.hasMany(db.OrderShop, {
+      foreignKey: {
+        name: "shopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
   };
 
   return Shop;

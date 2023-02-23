@@ -4,13 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       message: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+      },
+      messageImage: {
+        type: DataTypes.STRING,
       },
       sender: {
         type: DataTypes.ENUM(["shop", "user"]),
+        allowNull: false,
       },
     },
     {

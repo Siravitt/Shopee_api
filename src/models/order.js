@@ -9,13 +9,6 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
       shipping: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -30,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Order.associate = (db) => {
+    Order.belongsTo(db.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
     Order.hasMany(db.OrderItem, {
       foreignKey: {
         name: "orderId",
@@ -45,6 +45,13 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
     Order.hasOne(db.Payment, {
+      foreignKey: {
+        name: "orderId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+    Order.hasMany(db.OrderShop, {
       foreignKey: {
         name: "orderId",
         allowNull: false,
