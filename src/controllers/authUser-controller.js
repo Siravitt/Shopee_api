@@ -1,41 +1,26 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { User } = require("../models");
 const {
   validateRegister,
   validateLogin,
-} = require("../../validators/user-auth-validate");
-const createError = require("../../utils/create-error");
-const { Op } = require("sequelize");
-const { User } = require("../../models");
+} = require("../validators/authUser-validate");
+const createError = require("../utils/create-error");
 
 exports.register = async (req, res, next) => {
   try {
     const value = validateRegister(req.body);
 
     const user = await User.findOne({
-      where: {
-        [Op.or]: [
-          {
-            email: value.email,
-          },
-          {
-            phone: value.phone,
-          },
-        ],
-      },
+      where: { email: value.email, phone: value.phone },
     });
 
-    console.log(user);
-
     if (user) {
-      createError("Email or mobile phone is already in use", 400);
+      createError("Email or phone number is already in use", 400);
     }
-
-    value.password = await bcrypt.hash(value.password, 12);
 
     await User.create(value);
 
-    res.status(201).json({ message: "Register success. Please go to login" });
+    res.status(200).json({ message: "Register success" });
   } catch (err) {
     next(err);
   }
@@ -46,9 +31,7 @@ exports.login = async (req, res, next) => {
     const value = validateLogin(req.body);
 
     const user = await User.findOne({
-      where: {
-        email: value.email,
-      },
+      where: { email: value.email },
     });
 
     if (!user) {
@@ -66,6 +49,7 @@ exports.login = async (req, res, next) => {
         profileImage: user.profileImage,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET_KEY,
       {

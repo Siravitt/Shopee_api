@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      is_shop: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      }
     },
     {
       underscored: true,
@@ -54,6 +58,13 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = (db) => {
+    User.hasOne(db.Shop, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    })
     User.hasMany(db.Chat, {
       foreignKey: {
         name: "userId",

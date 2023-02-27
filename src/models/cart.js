@@ -30,6 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
+    Cart.belongsTo(db.Shop, {
+      foreignKey: {
+        name: "shopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
   };
 
   return Cart;

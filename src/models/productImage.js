@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const ProductPicture = sequelize.define(
-    "ProductPicture",
+  const ProductImage = sequelize.define(
+    "ProductImage",
     {
       image: DataTypes.STRING,
       isMain: {
@@ -16,15 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  ProductPicture.associate = (db) => {
-    ProductPicture.belongsTo(db.Product, {
+  ProductImage.associate = (db) => {
+    ProductImage.belongsTo(db.Product, {
       foreignKey: {
         name: "productId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 
-  return ProductPicture;
+  return ProductImage;
 };

@@ -31,14 +31,14 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      district: {
+      subDistrict: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      subDistrict: {
+      district: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

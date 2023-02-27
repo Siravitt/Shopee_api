@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const createError = require("../utils/create-error");
-const { User } = require("../models");
+const { User, Shop } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
@@ -19,8 +19,16 @@ module.exports = async (req, res, next) => {
       },
     });
 
+    const shop = await Shop.findOne({
+      where: { userId: payload.id },
+    });
+
     if (!user) {
       createError("You are unauthorized", 401);
+    }
+    
+    if (shop) {
+      req.shop = shop;
     }
 
     req.user = user;

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      shipping: {
+      status: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -40,20 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsTo(db.Address, {
       foreignKey: {
         name: "addressId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
-    Order.hasOne(db.Payment, {
-      foreignKey: {
-        name: "orderId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
-    Order.hasMany(db.OrderShop, {
-      foreignKey: {
-        name: "orderId",
         allowNull: false,
       },
       onDelete: "RESTRICT",

@@ -2,36 +2,50 @@ module.exports = (sequelize, DataTypes) => {
   const Shop = sequelize.define(
     "Shop",
     {
-      shopName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
-      password: {
+      profileImage: DataTypes.STRING,
+      address: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      phone: {
+      district: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
+      subDistrict: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      province: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      postalCode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      description: DataTypes.TEXT,
     },
     {
       underscored: true,
@@ -39,6 +53,13 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Shop.associate = (db) => {
+    Shop.belongsTo(db.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
     Shop.hasMany(db.Product, {
       foreignKey: {
         name: "shopId",
@@ -47,13 +68,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
     Shop.hasMany(db.Chat, {
-      foreignKey: {
-        name: "shopId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
-    Shop.hasMany(db.OrderShop, {
       foreignKey: {
         name: "shopId",
         allowNull: false,

@@ -16,8 +16,36 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      description: DataTypes.STRING,
+      description: DataTypes.TEXT,
       weight: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      quantityAvailable: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      width: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      length: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      height: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -31,12 +59,12 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Product.associate = (db) => {
-    Product.hasMany(db.ProductPicture, {
+    Product.hasMany(db.ProductImage, {
       foreignKey: {
         name: "productId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
     Product.belongsTo(db.Category, {
       foreignKey: {
