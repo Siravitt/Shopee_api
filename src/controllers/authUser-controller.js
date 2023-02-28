@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+const bcrypt = require("bcryptjs");
 const {
   validateRegister,
   validateLogin,
@@ -24,6 +25,11 @@ exports.register = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getme = async (req, res, next) => {
+  console.log("------>", JSON.stringify(req.user));
+  res.status(200).json(req.user);
 };
 
 exports.login = async (req, res, next) => {
@@ -54,7 +60,7 @@ exports.login = async (req, res, next) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
-      }
+      },
     );
 
     res.status(200).json({ accessToken });
