@@ -25,7 +25,7 @@ const notFoundMiddleware = require("./middlewares/notFound");
 app.use(cors());
 app.use(express.json());
 
-app.use("/", publicRoute)
+app.use("/", publicRoute);
 
 app.use("/user/auth", authUserRoute);
 app.use("/user/profile", authenticateUser, profileUserRoute);
