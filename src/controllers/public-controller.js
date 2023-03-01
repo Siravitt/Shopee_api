@@ -14,6 +14,24 @@ exports.getAllProduct = async (req, res, next) => {
   }
 };
 
+exports.getAllProductByCatId = async (req, res, next) => {
+  try {
+    const { categoryId } = req.params;
+    const products = await Product.findAll({
+      include: { model: ProductImage },
+      where: {
+        categoryId: categoryId,
+      },
+      order: Sequelize.literal("rand()"),
+      limit: 10,
+    });
+
+    res.status(200).json({ products });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getProductById = async (req, res, next) => {
   try {
     const { productId } = req.params;

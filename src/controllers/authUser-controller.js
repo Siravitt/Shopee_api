@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const jwtDecode = require("jwt-decode");
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const {
@@ -57,6 +58,57 @@ exports.login = async (req, res, next) => {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         is_shop: user.is_shop,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      },
+    );
+
+    res.status(200).json({ accessToken });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.googleLogin = async (req, res, next) => {
+  try {
+    // # verify with google
+    // const response = await client.verifyIdToken({
+    //   idToken: req.body.token,
+    //   audience: process.env.GOOGLE_CLIENT_ID,
+    //   // issuer: process.env.GOOGLE_CLIENT_ID,
+    // });
+
+    let google_user = jwtDecode(req.body.token);
+    console.log(google_user);
+    const { email, given_name, family_name } = google_user;
+
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    let newuser;
+    if (!user) {
+      newuser = await User.create({
+        email: email,
+        firstName: given_name,
+        lastName: family_name,
+        phone: "000000000",
+        userName: email,
+        password: "fromgoogle",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      {
+        id: user ? user.id : newuser.id,
+        name: user ? user.name : newuser.name,
+        email: user ? user.email : newuser.email,
+        profileImage: user ? user.profileImage : newuser.profileImage,
+        createdAt: user ? user.createdAt : newuser.createdAt,
+        updatedAt: user ? user.updatedAt : newuser.updatedAt,
       },
       process.env.JWT_SECRET_KEY,
       {

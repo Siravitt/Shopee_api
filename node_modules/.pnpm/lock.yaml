@@ -9,6 +9,7 @@ specifiers:
   express: ^4.18.2
   joi: ^17.7.1
   jsonwebtoken: ^9.0.0
+  jwt-decode: ^3.1.2
   multer: 1.4.5-lts.1
   mysql2: ^3.1.2
   sequelize: ^6.28.0
@@ -23,6 +24,7 @@ dependencies:
   express: 4.18.2
   joi: 17.7.1
   jsonwebtoken: 9.0.0
+  jwt-decode: 3.1.2
   multer: 1.4.5-lts.1
   mysql2: 3.1.2
   sequelize: 6.28.0_mysql2@3.1.2
@@ -721,6 +723,10 @@ packages:
     dependencies:
       jwa: 1.4.1
       safe-buffer: 5.2.1
+    dev: false
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
     dev: false
 
   /levn/0.3.0:
