@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const OrderItem = sequelize.define(
     "OrderItem",
     {
-      price: {
+      totalPrice: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -37,6 +37,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
+    OrderItem.belongsTo(db.OrderShop, {
+      foreignKey: {
+        name: "orderShopId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT"
+    })
   };
 
   return OrderItem;

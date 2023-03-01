@@ -15,6 +15,8 @@ const productShopRoute = require("./routes/productShop-route");
 const authUserRoute = require("./routes/authUser-route");
 const profileUserRoute = require("./routes/profileUser-route");
 const addressUserRoute = require("./routes/addressUser-route");
+const cartUserRoute = require("./routes/cartUser-route");
+const orderUserRoute = require("./routes/orderUser-route");
 
 const errorMiddleware = require("./middlewares/error");
 const notFoundMiddleware = require("./middlewares/notFound");
@@ -25,11 +27,13 @@ const notFoundMiddleware = require("./middlewares/notFound");
 app.use(cors());
 app.use(express.json());
 
-app.use("/", publicRoute)
+app.use("/", publicRoute);
 
 app.use("/user/auth", authUserRoute);
 app.use("/user/profile", authenticateUser, profileUserRoute);
 app.use("/user/address", authenticateUser, addressUserRoute);
+app.use("/user/cart", authenticateUser, cartUserRoute);
+app.use("/user/order", authenticateUser, orderUserRoute);
 
 app.use("/shop/auth", authenticateUser, authShopRoute);
 app.use("/shop/profile", authenticateUser, profileShopRoute);

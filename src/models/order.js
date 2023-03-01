@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(["PENDING", "SHIPPING", "SUCCESS"]),
+        defaultValue: "PENDING",
         allowNull: false,
         validate: {
           notEmpty: true,
