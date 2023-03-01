@@ -9,6 +9,7 @@ const createError = require("../utils/create-error");
 
 exports.register = async (req, res, next) => {
   try {
+    console.log(req.body);
     const value = validateRegister(req.body);
 
     const user = await User.findOne({
@@ -28,7 +29,7 @@ exports.register = async (req, res, next) => {
 };
 
 exports.getme = async (req, res, next) => {
-  console.log("------>", JSON.stringify(req.user));
+  // console.log("------>", JSON.stringify(req.user));
   res.status(200).json(req.user);
 };
 

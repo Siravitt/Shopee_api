@@ -1,8 +1,9 @@
-const { Product, Sequelize } = require("../models");
+const { Product, Sequelize, ProductImage } = require("../models");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
     const products = await Product.findAll({
+      include: { model: ProductImage },
       order: Sequelize.literal("rand()"),
       limit: 10,
     });
