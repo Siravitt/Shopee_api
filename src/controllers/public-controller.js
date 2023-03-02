@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Product, Sequelize, ProductImage } = require("../models");
+const { Product, Sequelize, ProductImage, Shop, OrderItem, sequelize } = require("../models");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
@@ -39,6 +39,28 @@ exports.getAllProductByCatId = async (req, res, next) => {
       },
       order: Sequelize.literal("rand()"),
       limit: 10,
+      include: [
+        {
+          model: OrderItem,
+          attributes: [],
+        },
+      ],
+      attributes: [
+        [
+          sequelize.fn("sum", sequelize.col("OrderItems.quantity")),
+          "totalSale",
+        ],
+        "id",
+        "name",
+        "price",
+        "description",
+        "weight",
+        "quantityAvailable",
+        "categoryId",
+        "shopId",
+      ],
+      group: ["Product.id"],
+      subQuery: false,
     });
 
     res.status(200).json({ products });
@@ -54,6 +76,31 @@ exports.getProductById = async (req, res, next) => {
       where: {
         id: productId,
       },
+      include: [
+        {
+          model: Shop,
+        },
+        {
+          model: OrderItem,
+          attributes: [],
+        },
+      ],
+      attributes: [
+        [
+          sequelize.fn("sum", sequelize.col("OrderItems.quantity")),
+          "totalSale",
+        ],
+        "id",
+        "name",
+        "price",
+        "description",
+        "weight",
+        "quantityAvailable",
+        "categoryId",
+        "shopId",
+      ],
+      group: ["Product.id"],
+      subQuery: false,
     });
     res.status(200).json({ product });
   } catch (err) {

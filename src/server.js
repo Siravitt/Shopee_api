@@ -13,7 +13,6 @@ const io = new Server(server, {
 });
 
 const onlineUser = {};
-const onlineShop = {};
 
 io.use((socket, next) => {
   const userId = socket.handshake.auth.userId;
