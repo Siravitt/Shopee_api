@@ -1,5 +1,12 @@
 const { Op } = require("sequelize");
-const { Product, Sequelize, ProductImage, Shop, OrderItem, sequelize } = require("../models");
+const {
+  Product,
+  Sequelize,
+  ProductImage,
+  Shop,
+  OrderItem,
+  sequelize,
+} = require("../models");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
@@ -131,12 +138,12 @@ exports.getProductById = async (req, res, next) => {
 exports.getProductImage = async (req, res, next) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findOne({
+    const image = await ProductImage.findAll({
       where: {
-        id: productId,
+        productId: productId,
       },
     });
-    res.status(200).json({ product });
+    res.status(200).json({ image });
   } catch (err) {
     next(err);
   }
