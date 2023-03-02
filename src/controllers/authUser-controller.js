@@ -57,7 +57,7 @@ exports.login = async (req, res, next) => {
         profileImage: user.profileImage,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        is_shop: user.is_shop,
+        isShop: user.is_shop,
       },
       process.env.JWT_SECRET_KEY,
       {

@@ -1,7 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  const Order = sequelize.define(
-    "Order",
+  const OrderShop = sequelize.define(
+    "OrderShop",
     {
+      status: {
+        type: DataTypes.ENUM(["PENDING", "SHIPPING", "SUCCESS"]),
+        defaultValue: "PENDING",
+      },
       totalPrice: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -9,9 +13,8 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      status: {
-        type: DataTypes.ENUM(["PENDING", "SHIPPING", "SUCCESS"]),
-        defaultValue: "PENDING",
+      shippingPrice: {
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -23,29 +26,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Order.associate = (db) => {
-    Order.belongsTo(db.User, {
+  OrderShop.associate = (db) => {
+    OrderShop.belongsTo(db.Shop, {
       foreignKey: {
-        name: "userId",
+        name: "shopId",
         allowNull: false,
       },
       onDelete: "RESTRICT",
     });
-    Order.hasMany(db.OrderItem, {
+    OrderShop.hasMany(db.OrderItem, {
       foreignKey: {
-        name: "orderId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
-    Order.belongsTo(db.Address, {
-      foreignKey: {
-        name: "addressId",
+        name: "orderShopId",
         allowNull: false,
       },
       onDelete: "RESTRICT",
     });
   };
 
-  return Order;
+  return OrderShop;
 };
