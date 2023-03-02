@@ -10,7 +10,7 @@ const {
 } = require("../models");
 
 const shippingPriceCal = async (totalWeight, origins, destinations) => {
-  const apiKey = "AIzaSyCNNJEh94Bth7Nfk4We590UYAe714KQsdg";
+  const apiKey = process.env.GOOGLE_MAP_API_KEY;
   let distance = await axios.get(
     `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${apiKey}`
   );
@@ -63,9 +63,9 @@ exports.createOrder = async (req, res, next) => {
       ],
     });
 
-    // await Cart.destroy({
-    //   where: { productId: req.body.productId },
-    // });
+    await Cart.destroy({
+      where: { productId: req.body.productId, userId: req.user.id },
+    });
 
     const destinations = await Address.findOne({
       where: {
@@ -75,10 +75,17 @@ exports.createOrder = async (req, res, next) => {
     });
 
     const priceEachShop = [];
+    const items = [];
     for (const product of cart) {
       const newProduct = priceEachShop.findIndex(
         (el) => el.shopId === product.shopId
       );
+
+      items.push({
+        productId: product.productId,
+        quantity: product.quantity,
+        totalPrice: product.Product.price * product.quantity,
+      });
 
       if (newProduct === -1) {
         priceEachShop.push({
@@ -114,18 +121,69 @@ exports.createOrder = async (req, res, next) => {
       totalPrice += price.totalPrice + shipPrice;
       price.shippingPrice = shipPrice;
     }
-    
+
     const order = {
       totalPrice: totalPrice,
       addressId: req.body.addressId,
       userId: req.user.id,
     };
-    // const newOrder = await Order.create(order);
 
-    // const newOrderShop = await OrderShop.create();
-    // const orderItem = await
+    const newOrderShop = await OrderShop.bulkCreate(priceEachShop);
+    const newOrder = await Order.create(order);
 
-    res.status(200).json({ priceEachShop });
+    for (const item of items) {
+      let i = 0;
+      item.orderShopId = newOrderShop[i].id;
+      item.orderId = newOrder.id;
+      i++;
+    }
+
+    await OrderItem.bulkCreate(items);
+
+    res.status(200).json({ message: "Create success" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getOrder = async (req, res, next) => {
+  try {
+    const order = await OrderItem.findAll({
+      include: [
+        {
+          model: Order,
+          where: {
+            userId: req.user.id,
+          },
+        },
+        {
+          model: OrderShop,
+          where: {
+            status: req.query.status,
+          },
+        },
+      ],
+    });
+    res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateOrder = async (req, res, next) => {
+  try {
+    const { orderShopId } = req.params;
+    await OrderShop.update(
+      {
+        status: "SUCCESS",
+      },
+      {
+        where: {
+          id: orderShopId,
+        },
+      }
+    );
+    res.status(200).json({ message: "Update success" });
   } catch (err) {
     next(err);
   }
