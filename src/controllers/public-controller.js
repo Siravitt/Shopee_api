@@ -30,6 +30,7 @@ exports.getAllProduct = async (req, res, next) => {
 };
 
 exports.getAllProductByCatId = async (req, res, next) => {
+  console.log("aaaaaaaax");
   try {
     const { categoryId } = req.params;
     const products = await Product.findAll({
@@ -81,7 +82,12 @@ exports.getAllProductByShopId = async (req, res, next) => {
   try {
     const { shopId } = req.params;
     const productShopId = await Product.findAll({
-      include: { model: ProductImage },
+      include: {
+        model: ProductImage,
+        where: {
+          isMain: true,
+        },
+      },
       where: {
         shopId: shopId,
       },
