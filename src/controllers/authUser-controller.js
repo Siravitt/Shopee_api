@@ -16,7 +16,7 @@ exports.register = async (req, res, next) => {
       where: { email: value.email, phone: value.phone },
     });
 
-    value.password = await bcrypt.hash(value.password, 12)
+    value.password = await bcrypt.hash(value.password, 12);
     if (user) {
       createError("Email or phone number is already in use", 400);
     }
@@ -29,7 +29,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.getme = async (req, res, next) => {
+exports.getMe = async (req, res, next) => {
   res.status(200).json(req.user);
 };
 
@@ -87,7 +87,6 @@ exports.googleLogin = async (req, res, next) => {
     // });
 
     let google_user = jwtDecode(req.body.token);
-    console.log(google_user);
     const { email, given_name, family_name } = google_user;
 
     const user = await User.findOne({
@@ -95,26 +94,26 @@ exports.googleLogin = async (req, res, next) => {
         email: email,
       },
     });
-    let newuser;
+
+    let newUser;
+
     if (!user) {
-      newuser = await User.create({
+      newUser = await User.create({
         email: email,
         firstName: given_name,
         lastName: family_name,
-        phone: "000000000",
         userName: email,
-        password: "fromgoogle",
       });
     }
 
     const accessToken = jwt.sign(
       {
-        id: user ? user.id : newuser.id,
-        name: user ? user.name : newuser.name,
-        email: user ? user.email : newuser.email,
-        profileImage: user ? user.profileImage : newuser.profileImage,
-        createdAt: user ? user.createdAt : newuser.createdAt,
-        updatedAt: user ? user.updatedAt : newuser.updatedAt,
+        id: user ? user.id : newUser.id,
+        name: user ? user.name : newUser.name,
+        email: user ? user.email : newUser.email,
+        profileImage: user ? user.profileImage : newUser.profileImage,
+        createdAt: user ? user.createdAt : newUser.createdAt,
+        updatedAt: user ? user.updatedAt : newUser.updatedAt,
       },
       process.env.JWT_SECRET_KEY,
       {
