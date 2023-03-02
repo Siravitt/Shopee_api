@@ -34,18 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       profileImage: DataTypes.STRING,
       phone: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        allowNull: true,
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        allowNull: true,
       },
       is_shop: {
         type: DataTypes.BOOLEAN,
