@@ -6,8 +6,12 @@ const publicController = require("../controllers/public-controller");
 router.get("/product", publicController.getAllProduct);
 router.get(
   "/product/category/:categoryId",
-  publicController.getAllProductByCatId,
+  publicController.getAllProductByCatId
 );
 router.get("/product/:productId", publicController.getProductById);
+
+//---------------------router shop-----------------------
+router.get("/Shopproduct/:shopId", publicController.getAllProductByShopId);
+//---------------------end router shop-----------------------
 
 module.exports = router;

@@ -32,6 +32,26 @@ exports.getAllProductByCatId = async (req, res, next) => {
   }
 };
 
+//=========================add shop =======================
+exports.getAllProductByShopId = async (req, res, next) => {
+  try {
+    const { shopId } = req.params;
+    const productShopId = await Product.findAll({
+      include: { model: ProductImage },
+      where: {
+        shopId: shopId,
+      },
+      order: Sequelize.literal("rand()"),
+      limit: 10,
+    });
+
+    res.status(200).json({ productShopId });
+  } catch (err) {
+    next(err);
+  }
+};
+//=========================end add shop =======================
+
 exports.getProductById = async (req, res, next) => {
   try {
     const { productId } = req.params;
