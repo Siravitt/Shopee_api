@@ -10,13 +10,13 @@ const createError = require("../utils/create-error");
 
 exports.register = async (req, res, next) => {
   try {
-    console.log(req.body);
     const value = validateRegister(req.body);
 
     const user = await User.findOne({
       where: { email: value.email, phone: value.phone },
     });
 
+    value.password = await bcrypt.hash(value.password, 12)
     if (user) {
       createError("Email or phone number is already in use", 400);
     }
@@ -30,7 +30,6 @@ exports.register = async (req, res, next) => {
 };
 
 exports.getme = async (req, res, next) => {
-  // console.log("------>", JSON.stringify(req.user));
   res.status(200).json(req.user);
 };
 
@@ -44,6 +43,13 @@ exports.login = async (req, res, next) => {
 
     if (!user) {
       createError("Invalid email or password", 400);
+    }
+
+    console.log(user.password, value.password);
+
+    const isCorrect = await bcrypt.compare(value.password, user.password);
+    if (!isCorrect) {
+      createError("Invalid email or mobile or password", 400);
     }
 
     const accessToken = jwt.sign(
@@ -62,7 +68,7 @@ exports.login = async (req, res, next) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
-      },
+      }
     );
 
     res.status(200).json({ accessToken });
@@ -113,7 +119,7 @@ exports.googleLogin = async (req, res, next) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
-      },
+      }
     );
 
     res.status(200).json({ accessToken });
