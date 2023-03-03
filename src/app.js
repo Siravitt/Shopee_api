@@ -30,6 +30,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/", publicRoute);
+app.use("/search", publicRoute);
 
 app.use("/user/auth", authUserRoute);
 app.use("/user/profile", authenticateUser, profileUserRoute);
