@@ -14,10 +14,9 @@ exports.getAllProduct = async (req, res, next) => {
       include: {
         model: ProductImage,
         where: {
-          isMain: {
-            [Op.ne]: false,
-          },
+          // isMain: true,
         },
+        // require: true,
       },
       order: Sequelize.literal("rand()"),
       limit: 10,
@@ -34,14 +33,6 @@ exports.getAllProductByCatId = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const products = await Product.findAll({
-      include: {
-        model: ProductImage,
-        where: {
-          isMain: {
-            [Op.ne]: false,
-          },
-        },
-      },
       where: {
         categoryId: categoryId,
       },
@@ -51,6 +42,9 @@ exports.getAllProductByCatId = async (req, res, next) => {
         {
           model: OrderItem,
           attributes: [],
+        },
+        {
+          model: ProductImage,
         },
       ],
       attributes: [
@@ -67,7 +61,7 @@ exports.getAllProductByCatId = async (req, res, next) => {
         "categoryId",
         "shopId",
       ],
-      group: ["Product.id"],
+      group: ["Product.id", "ProductImages.id"],
       subQuery: false,
     });
 
@@ -82,12 +76,14 @@ exports.getAllProductByShopId = async (req, res, next) => {
   try {
     const { shopId } = req.params;
     const productShopId = await Product.findAll({
-      include: {
-        model: ProductImage,
-        where: {
-          isMain: true,
+      include: [
+        {
+          model: ProductImage,
         },
-      },
+        {
+          model: Shop,
+        },
+      ],
       where: {
         shopId: shopId,
       },
@@ -154,3 +150,18 @@ exports.getProductImage = async (req, res, next) => {
     next(err);
   }
 };
+//=========================get shop info ==========================
+exports.getShopInfoPublic = async (req, res, next) => {
+  try {
+    const { shopId } = req.params;
+    const shop = await Shop.findOne({
+      where: {
+        id: shopId,
+      },
+    });
+    res.status(200).json({ shop });
+  } catch (err) {
+    next(err);
+  }
+};
+//=========================end get shop info=======================

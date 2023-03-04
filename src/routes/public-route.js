@@ -12,6 +12,7 @@ router.get("/product/:productId", publicController.getProductById);
 router.get("/image/:productId", publicController.getProductImage);
 //---------------------router shop-----------------------
 router.get("/Shopproduct/:shopId", publicController.getAllProductByShopId);
+router.get("/shop/:shopId", publicController.getShopInfoPublic);
 //---------------------end router shop-----------------------
 
 module.exports = router;
