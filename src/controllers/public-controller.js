@@ -1,5 +1,12 @@
 const { Op } = require("sequelize");
-const { Product, Sequelize, ProductImage, Shop, OrderItem, sequelize } = require("../models");
+const {
+  Product,
+  Sequelize,
+  ProductImage,
+  Shop,
+  OrderItem,
+  sequelize,
+} = require("../models");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
@@ -7,10 +14,9 @@ exports.getAllProduct = async (req, res, next) => {
       include: {
         model: ProductImage,
         where: {
-          isMain: {
-            [Op.ne]: false,
-          },
+          // isMain: true,
         },
+        // require: true,
       },
       order: Sequelize.literal("rand()"),
       limit: 10,
@@ -23,17 +29,10 @@ exports.getAllProduct = async (req, res, next) => {
 };
 
 exports.getAllProductByCatId = async (req, res, next) => {
+  console.log("aaaaaaaax");
   try {
     const { categoryId } = req.params;
     const products = await Product.findAll({
-      include: {
-        model: ProductImage,
-        where: {
-          isMain: {
-            [Op.ne]: false,
-          },
-        },
-      },
       where: {
         categoryId: categoryId,
       },
@@ -43,6 +42,9 @@ exports.getAllProductByCatId = async (req, res, next) => {
         {
           model: OrderItem,
           attributes: [],
+        },
+        {
+          model: ProductImage,
         },
       ],
       attributes: [
@@ -59,7 +61,7 @@ exports.getAllProductByCatId = async (req, res, next) => {
         "categoryId",
         "shopId",
       ],
-      group: ["Product.id"],
+      group: ["Product.id", "ProductImages.id"],
       subQuery: false,
     });
 
@@ -74,7 +76,14 @@ exports.getAllProductByShopId = async (req, res, next) => {
   try {
     const { shopId } = req.params;
     const productShopId = await Product.findAll({
-      include: { model: ProductImage },
+      include: [
+        {
+          model: ProductImage,
+        },
+        {
+          model: Shop,
+        },
+      ],
       where: {
         shopId: shopId,
       },
@@ -131,13 +140,28 @@ exports.getProductById = async (req, res, next) => {
 exports.getProductImage = async (req, res, next) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findOne({
+    const image = await ProductImage.findAll({
       where: {
-        id: productId,
+        productId: productId,
       },
     });
-    res.status(200).json({ product });
+    res.status(200).json({ image });
   } catch (err) {
     next(err);
   }
 };
+//=========================get shop info ==========================
+exports.getShopInfoPublic = async (req, res, next) => {
+  try {
+    const { shopId } = req.params;
+    const shop = await Shop.findOne({
+      where: {
+        id: shopId,
+      },
+    });
+    res.status(200).json({ shop });
+  } catch (err) {
+    next(err);
+  }
+};
+//=========================end get shop info=======================
