@@ -162,6 +162,9 @@ exports.getOrder = async (req, res, next) => {
             status: req.query.status,
           },
         },
+        {
+          model: Product,
+        },
       ],
     });
     res.status(200).json({ order });
