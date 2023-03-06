@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Product } = require("../models");
+const { Product, ProductImage } = require("../models");
 
 exports.searchProduct = async (req, res) => {
   const { name } = req.query;
@@ -20,6 +20,7 @@ exports.searchProduct = async (req, res) => {
           //       // },
         ],
       },
+      include: { model: ProductImage },
     });
     res.json(results);
   } catch (error) {
