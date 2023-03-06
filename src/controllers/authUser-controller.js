@@ -68,7 +68,7 @@ exports.login = async (req, res, next) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
-      }
+      },
     );
 
     res.status(200).json({ accessToken });
@@ -118,7 +118,7 @@ exports.googleLogin = async (req, res, next) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
-      }
+      },
     );
 
     res.status(200).json({ accessToken });
