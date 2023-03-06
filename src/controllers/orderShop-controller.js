@@ -5,14 +5,21 @@ exports.getOrder = async (req, res, next) => {
     const order = await OrderItem.findAll({
       include: [
         {
-          model: OrderShop,
+          model: Order,
           where: {
-            shopId: req.shop.id,
+            userId: req.user.id,
           },
         },
         {
-            model: Product
-        }
+          model: OrderShop,
+          where: {
+            shopId: req.shop.id,
+            status: req.query.status,
+          },
+        },
+        {
+          model: Product,
+        },
       ],
     });
     res.status(200).json({ order });

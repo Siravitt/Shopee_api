@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     "OrderShop",
     {
       status: {
-        type: DataTypes.ENUM(["PENDING", "SHIPPING", "SUCCESS"]),
+        type: DataTypes.ENUM(["PENDING", "SHIPPING", "SUCCESS", "CANCELLED"]),
         defaultValue: "PENDING",
       },
       totalPrice: {
