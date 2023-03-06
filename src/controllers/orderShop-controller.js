@@ -1,4 +1,4 @@
-const { OrderShop, Order, OrderItem, Product } = require("../models");
+const { OrderShop, Order, OrderItem, Product, Shop } = require("../models");
 
 exports.getOrder = async (req, res, next) => {
   try {
@@ -23,6 +23,20 @@ exports.getOrder = async (req, res, next) => {
       ],
     });
     res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+exports.getOrderForshop = async (req, res, next) => {
+  try {
+    const orderShop = await OrderShop.findAll({
+      include: { model: Shop },
+      where: {
+        shopId: req.shop.id,
+        status: req.query.status,
+      },
+    });
+    res.status(200).json({ orderShop });
   } catch (err) {
     next(err);
   }

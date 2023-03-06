@@ -155,13 +155,14 @@ exports.getOrder = async (req, res, next) => {
           where: {
             userId: req.user.id,
           },
-        },
-        {
-          model: OrderShop,
-          where: {
-            status: req.query.status,
+          include: {
+            model: OrderShop,
+            where: {
+              status: req.query.status,
+            },
           },
         },
+
         {
           model: Product,
         },
