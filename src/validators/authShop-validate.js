@@ -7,6 +7,6 @@ const createShopSchema = Joi.object({
     "string.empty": "Shop name is required",
     "string.base": "Shop name must be a string",
   }),
-});
+}).options({ allowUnknown: true });
 
 exports.validateCreateShop = validate(createShopSchema);
