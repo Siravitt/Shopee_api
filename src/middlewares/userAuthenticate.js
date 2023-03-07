@@ -19,15 +19,14 @@ module.exports = async (req, res, next) => {
       },
     });
 
-    const shop = await Shop.findOne({
-      where: { userId: payload.id },
-    });
-
     if (!user) {
       createError("You are unauthorized", 401);
     }
-    
-    if (shop) {
+
+    if (user.is_shop) {
+      const shop = await Shop.findOne({
+        where: { userId: payload.id },
+      });
       req.shop = shop;
     }
 
