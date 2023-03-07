@@ -146,33 +146,99 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 
+// exports.getOrder = async (req, res, next) => {
+//   try {
+//     const order = await OrderItem.findAll({
+//       include: [
+//         {
+//           model: Order,
+//           where: {
+//             userId: req.user.id,
+//           },
+//         },
+//         {
+//           model: OrderShop,
+//           where: {
+//             // shopId: req.shop.id, //add
+
+//             status: req.query.status,
+//           },
+//         },
+//         {
+//           model: Product,
+//         },
+//       ],
+//     });
+//     res.status(200).json({ order });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 exports.getOrder = async (req, res, next) => {
   try {
-    const order = await OrderItem.findAll({
+    const order = await Order.findAll({
+      attributes: ["id", "userId"],
+      where: {
+        userId: req.user.id,
+      },
       include: [
         {
-          model: Order,
-          where: {
-            userId: req.user.id,
-          },
-          include: {
-            model: OrderShop,
-            where: {
-              status: req.query.status,
+          model: OrderItem,
+          attributes: ["totalPrice", "quantity", "orderShopId", "productId"],
+          order: ["orderShopId"],
+          include: [
+            {
+              model: Product,
+              attributes: ["id", "name", "price"],
             },
-          },
-        },
+            {
+              model: OrderShop,
+              attributes: ["id", "status", "totalPrice"],
+              where: {
+                // shopId: req.shop.id, //add
 
-        {
-          model: Product,
+                status: req.query.status,
+              },
+            },
+          ],
         },
       ],
     });
-    res.status(200).json({ order });
+    let output = order.map((el) => {
+      return el.OrderItems.map((item) => {
+        return item;
+      });
+    });
+    let output2 = output[0].reduce((a, c) => {
+      const { orderShopId } = c;
+      a[orderShopId] = a[orderShopId] ?? [];
+      a[orderShopId].push(c);
+      return a;
+    }, {});
+    res.status(200).json(output2);
   } catch (err) {
     next(err);
   }
 };
+
+//add
+exports.getOrderShopForuser = async (req, res, next) => {
+  try {
+    const orderShop = await OrderShop.findAll({
+      include: { model: Shop },
+      where: {
+        userId: req.user.id,
+        // shopId: req.shop.id,
+        status: req.query.status,
+      },
+    });
+    res.status(200).json({ orderShop });
+  } catch (err) {
+    next(err);
+  }
+};
+//end
 
 exports.updateOrder = async (req, res, next) => {
   try {

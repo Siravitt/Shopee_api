@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
+
     OrderShop.hasMany(db.OrderItem, {
       foreignKey: {
         name: "orderShopId",
