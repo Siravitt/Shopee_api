@@ -13,13 +13,6 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      shippingPrice: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
     },
     {
       underscored: true,

@@ -15,7 +15,6 @@ const editShopProfileSchema = Joi.object({
     "string.base": "District must be a string",
   }),
   subDistrict: Joi.string().trim().messages({
-    "string.empty": "Sub-district is required",
     "string.base": "Sub-district must be a string",
   }),
   province: Joi.string().trim().messages({

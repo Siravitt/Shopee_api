@@ -11,16 +11,35 @@ const {
 exports.getAllProduct = async (req, res, next) => {
   try {
     const products = await Product.findAll({
-      include: {
-        model: ProductImage,
-        where: {
-          // isMain: true,
-        },
-        // require: true,
-      },
-      order: Sequelize.literal("rand()"),
+      order: sequelize.literal("rand()"),
       limit: 10,
+      include: [
+        {
+          model: OrderItem,
+          attributes: [],
+        },
+        {
+          model: ProductImage,
+        },
+      ],
+      attributes: [
+        [
+          sequelize.fn("sum", sequelize.col("OrderItems.quantity")),
+          "totalSale",
+        ],
+        "id",
+        "name",
+        "price",
+        "description",
+        "weight",
+        "quantityAvailable",
+        "categoryId",
+        "shopId",
+      ],
+      group: ["Product.id", "ProductImages.id"],
+      subQuery: false,
     });
+
 
     res.status(200).json({ products });
   } catch (err) {

@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { Product, ProductImage } = require("../models");
+const { Product, ProductImage, sequelize, OrderItem } = require("../models");
 const cloudinary = require("../utils/cloudinary");
 const { validateCreateProduct } = require("../validators/product-validate");
 
@@ -9,6 +9,34 @@ exports.getAllProduct = async (req, res, next) => {
       where: {
         shopId: req.shop.id,
       },
+      include: [
+        {
+          model: ProductImage,
+          where: {
+            isMain: true,
+          },
+        },
+        {
+          model: OrderItem,
+          attributes: [],
+        },
+      ],
+      attributes: [
+        [
+          sequelize.fn("sum", sequelize.col("OrderItems.quantity")),
+          "totalSale",
+        ],
+        "id",
+        "name",
+        "price",
+        "description",
+        "weight",
+        "quantityAvailable",
+        "categoryId",
+        "shopId",
+      ],
+      group: ["Product.id", "ProductImages.id"],
+      subQuery: false,
     });
     res.status(200).json({ products });
   } catch (err) {

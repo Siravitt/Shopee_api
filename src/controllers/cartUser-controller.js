@@ -1,4 +1,4 @@
-const { Cart, Product, Shop } = require("../models");
+const { Cart, Product, Shop, ProductImage } = require("../models");
 
 exports.getCart = async (req, res, next) => {
   try {
@@ -9,41 +9,55 @@ exports.getCart = async (req, res, next) => {
           model: Product,
         },
         {
-          model: Shop,
+          model: Shop,    
         },
       ],
     });
-    res.status(200).json({ cart });
+
+    const productId = cart.map((el) => el.productId);
+
+    const images = await ProductImage.findAll({
+      where: { productId: productId, isMain: true },
+      attributes: ["image", "productId"],
+    });
+
+    const newCart = [];
+    for (const item of cart) {
+      const image = images.find((el) => el.productId === item.productId);
+      item.dataValues.image = image;
+      newCart.push(item);
+    }
+
+    res.status(200).json({ newCart });
   } catch (err) {
     next(err);
   }
 };
 
-exports.addOrUpdateCart = async (req, res, next) => {
+exports.addToCart = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({
-      where: { productId: req.body.productId },
+    await Cart.create({
+      quantity: req.body.quantity,
+      productId: req.body.productId,
+      userId: req.user.id,
+      shopId: req.body.shopId,
     });
-    if (!cart) {
-      await Cart.create({
-        quantity: req.body.quantity,
-        productId: req.body.productId,
-        userId: req.user.id,
-        shopId: req.body.shopId,
-      });
-    } else {
-      await Cart.update(
-        {
-          quantity: req.body.quantity,
-        },
-        {
-          where: {
-            id: cart.id,
-          },
-        }
-      );
-    }
+
     res.status(200).json({ message: "Add success" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateCart = async (req, res, next) => {
+  try {
+    await Cart.destroy({
+      where: {
+        userId: req.user.id,
+      },
+    });
+    await Cart.bulkCreate(req.body);
+    res.status(200).json({ message: "Update success" });
   } catch (err) {
     next(err);
   }

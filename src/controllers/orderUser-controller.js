@@ -9,42 +9,42 @@ const {
   Address,
 } = require("../models");
 
-const shippingPriceCal = async (totalWeight, origins, destinations) => {
-  const apiKey = process.env.GOOGLE_MAP_API_KEY;
-  let distance = await axios.get(
-    `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${apiKey}`
-  );
+// const shippingPriceCal = async (totalWeight, origins, destinations) => {
+//   const apiKey = process.env.GOOGLE_MAP_API_KEY;
+//   let distance = await axios.get(
+//     `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${apiKey}`
+//   );
 
-  let unit = distance.data.rows[0].elements[0].distance.text.split(" ");
-  if (unit[1] === "m") {
-    distance = 1;
-  } else {
-    distance = unit[0];
-  }
+//   let unit = distance.data.rows[0].elements[0].distance.text.split(" ");
+//   if (unit[1] === "m") {
+//     distance = 1;
+//   } else {
+//     distance = unit[0];
+//   }
 
-  let rateKg = 0;
-  if (totalWeight <= 1) {
-    rateKg = 10;
-  } else if (totalWeight <= 5) {
-    rateKg = 5;
-  } else if (totalWeight <= 10) {
-    rateKg = 4;
-  } else {
-    rateKg = 7;
-  }
+//   let rateKg = 0;
+//   if (totalWeight <= 1) {
+//     rateKg = 10;
+//   } else if (totalWeight <= 5) {
+//     rateKg = 5;
+//   } else if (totalWeight <= 10) {
+//     rateKg = 4;
+//   } else {
+//     rateKg = 7;
+//   }
 
-  let rateKm = 0;
-  if (distance <= 5) {
-    rateKm = 4;
-  } else if (distance <= 30) {
-    rateKm = 3;
-  } else if (distance <= 100) {
-    rateKm = 2;
-  } else {
-    rateKm = 1.5;
-  }
-  return totalWeight * rateKg + distance * rateKm;
-};
+//   let rateKm = 0;
+//   if (distance <= 5) {
+//     rateKm = 4;
+//   } else if (distance <= 30) {
+//     rateKm = 3;
+//   } else if (distance <= 100) {
+//     rateKm = 2;
+//   } else {
+//     rateKm = 1.5;
+//   }
+//   return totalWeight * rateKg + distance * rateKm;
+// };
 
 exports.createOrder = async (req, res, next) => {
   try {
@@ -67,19 +67,14 @@ exports.createOrder = async (req, res, next) => {
       where: { productId: req.body.productId, userId: req.user.id },
     });
 
-    const destinations = await Address.findOne({
-      where: {
-        userId: req.user.id,
-        id: req.body.addressId,
-      },
-    });
-
+    let totalPrice = 0;
     const priceEachShop = [];
     const items = [];
     for (const product of cart) {
       const newProduct = priceEachShop.findIndex(
         (el) => el.shopId === product.shopId
       );
+      totalPrice += product.Product.price * product.quantity;
 
       items.push({
         productId: product.productId,
@@ -91,7 +86,6 @@ exports.createOrder = async (req, res, next) => {
         priceEachShop.push({
           shopId: product.shopId,
           totalPrice: product.Product.price * product.quantity,
-          weight: product.Product.weight * product.quantity,
           address:
             product.Shop.subDistrict +
             ", " +
@@ -101,25 +95,7 @@ exports.createOrder = async (req, res, next) => {
         });
       } else {
         priceEachShop[newProduct].totalPrice += +product.Product.price;
-        priceEachShop[newProduct].weight +=
-          +product.Product.weight * product.quantity;
       }
-    }
-
-    let totalPrice = 0;
-
-    for (const price of priceEachShop) {
-      const shipPrice = await shippingPriceCal(
-        price.weight,
-        price.address,
-        destinations.subDistrict +
-          ", " +
-          destinations.district +
-          ", " +
-          destinations.province
-      );
-      totalPrice += price.totalPrice + shipPrice;
-      price.shippingPrice = shipPrice;
     }
 
     const order = {

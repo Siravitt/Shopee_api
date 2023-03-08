@@ -13,19 +13,23 @@ const io = new Server(server, {
 });
 
 const onlineUser = {};
+const onlineShop = {};
 
 io.use((socket, next) => {
   const userId = socket.handshake.auth.userId;
-  const shopId = socket.handshake.auth.shopId;
+  if (socket.handshake.auth.shopId) {
+    const shopId = socket.handshake.auth.shopId;
+    onlineShop[shopId] = socket.id;
+  }
   //   socket.userId = userId;
   onlineUser[userId] = socket.id;
-  onlineShop[shopId] = socket.id;
   next();
 });
 
 io.on("connection", (socket) => {
-  console.log(onlineShop, onlineUser);
-  socket.on("send_message", () => {})
+  console.log("onlineUser",onlineUser);
+  console.log("onlineShop",onlineShop);
+  socket.on("send_message", ({ to, from }) => {});
 });
 
 server.listen(process.env.PORT, () =>
