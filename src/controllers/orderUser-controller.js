@@ -72,7 +72,7 @@ exports.createOrder = async (req, res, next) => {
     const items = [];
     for (const product of cart) {
       const newProduct = priceEachShop.findIndex(
-        el => el.shopId === product.shopId,
+        (el) => el.shopId === product.shopId
       );
       totalPrice += product.Product.price * product.quantity;
 
@@ -176,13 +176,14 @@ exports.getOrder = async (req, res, next) => {
 
                 status: req.query.status,
               },
+              include: { model: Shop },
             },
           ],
         },
       ],
     });
-    let output = order.map(el => {
-      return el.OrderItems.map(item => {
+    let output = order.map((el) => {
+      return el.OrderItems.map((item) => {
         return item;
       });
     });
@@ -204,8 +205,8 @@ exports.getOrderShopForuser = async (req, res, next) => {
     const orderShop = await OrderShop.findAll({
       include: { model: Shop },
       where: {
-        userId: req.user.id,
-        // shopId: req.shop.id,
+        // userId: req.user.id,
+        shopId: req.shop.id,
         status: req.query.status,
       },
     });
@@ -219,6 +220,7 @@ exports.getOrderShopForuser = async (req, res, next) => {
 exports.updateOrder = async (req, res, next) => {
   try {
     const { orderShopId } = req.params;
+    console.log(orderShopId);
     await OrderShop.update(
       {
         status: "SUCCESS",
@@ -227,7 +229,7 @@ exports.updateOrder = async (req, res, next) => {
         where: {
           id: orderShopId,
         },
-      },
+      }
     );
     res.status(200).json({ message: "Update success" });
   } catch (err) {
