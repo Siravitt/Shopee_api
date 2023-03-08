@@ -72,7 +72,7 @@ exports.createOrder = async (req, res, next) => {
     const items = [];
     for (const product of cart) {
       const newProduct = priceEachShop.findIndex(
-        (el) => el.shopId === product.shopId
+        el => el.shopId === product.shopId,
       );
       totalPrice += product.Product.price * product.quantity;
 
@@ -181,8 +181,8 @@ exports.getOrder = async (req, res, next) => {
         },
       ],
     });
-    let output = order.map((el) => {
-      return el.OrderItems.map((item) => {
+    let output = order.map(el => {
+      return el.OrderItems.map(item => {
         return item;
       });
     });
@@ -227,7 +227,7 @@ exports.updateOrder = async (req, res, next) => {
         where: {
           id: orderShopId,
         },
-      }
+      },
     );
     res.status(200).json({ message: "Update success" });
   } catch (err) {
