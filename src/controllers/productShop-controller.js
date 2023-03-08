@@ -51,7 +51,8 @@ exports.createProduct = async (req, res, next) => {
     value.shopId = req.shop.id;
 
     const product = await Product.create(value);
-
+    console.log(req.files, req.body);
+    
     if (req.files) {
       const urls = [];
       const files = req.files;
@@ -61,6 +62,8 @@ exports.createProduct = async (req, res, next) => {
         urls.push({ isMain: false, image: newPath, productId: product.id });
         fs.unlinkSync(path);
       }
+      // console.log(urls);
+      urls[0].isMain = true;
       await ProductImage.bulkCreate(urls);
     }
     res.status(200).json({ message: "Create product success" });

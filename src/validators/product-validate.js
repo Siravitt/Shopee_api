@@ -15,6 +15,6 @@ const createProductSchema = Joi.object({
   length: Joi.number().min(0),
   height: Joi.number().min(0),
   categoryId: Joi.number().required(),
-});
+}).options({ allowUnknown: true });
 
 exports.validateCreateProduct = validate(createProductSchema);
