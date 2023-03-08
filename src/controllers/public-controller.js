@@ -40,7 +40,6 @@ exports.getAllProduct = async (req, res, next) => {
       subQuery: false,
     });
 
-
     res.status(200).json({ products });
   } catch (err) {
     next(err);
