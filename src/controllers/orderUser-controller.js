@@ -12,7 +12,7 @@ const {
 const shippingPriceCal = async (totalWeight, origins, destinations) => {
   const apiKey = process.env.GOOGLE_MAP_API_KEY;
   let distance = await axios.get(
-    `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${apiKey}`
+    `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${apiKey}`,
   );
 
   let unit = distance.data.rows[0].elements[0].distance.text.split(" ");
@@ -78,7 +78,7 @@ exports.createOrder = async (req, res, next) => {
     const items = [];
     for (const product of cart) {
       const newProduct = priceEachShop.findIndex(
-        (el) => el.shopId === product.shopId
+        el => el.shopId === product.shopId,
       );
 
       items.push({
@@ -116,7 +116,7 @@ exports.createOrder = async (req, res, next) => {
           ", " +
           destinations.district +
           ", " +
-          destinations.province
+          destinations.province,
       );
       totalPrice += price.totalPrice + shipPrice;
       price.shippingPrice = shipPrice;
@@ -184,7 +184,7 @@ exports.updateOrder = async (req, res, next) => {
         where: {
           id: orderShopId,
         },
-      }
+      },
     );
     res.status(200).json({ message: "Update success" });
   } catch (err) {

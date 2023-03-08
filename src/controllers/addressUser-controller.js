@@ -70,15 +70,19 @@ exports.editAddress = async (req, res, next) => {
 exports.deleteAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
+    const value = validateEditAddress(req.body);
 
-    await Address.destroy({
-      where: {
-        id: addressId,
-        userId: req.user.id,
+    await Address.update(
+      {
+        // user_id: req.user.user_id,
+        userId: 0,
       },
-    });
+      {
+        where: { id: addressId },
+      },
+    );
 
-    res.status(200).json({message: "Delete success"})
+    res.status(200).json({ message: "Delete success" });
   } catch (err) {
     next(err);
   }
