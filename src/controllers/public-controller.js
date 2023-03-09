@@ -20,6 +20,9 @@ exports.getAllProduct = async (req, res, next) => {
         },
         {
           model: ProductImage,
+          where: {
+            isMain: true,
+          },
         },
       ],
       attributes: [
@@ -39,7 +42,6 @@ exports.getAllProduct = async (req, res, next) => {
       group: ["Product.id", "ProductImages.id"],
       subQuery: false,
     });
-
 
     res.status(200).json({ products });
   } catch (err) {

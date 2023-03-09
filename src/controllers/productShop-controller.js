@@ -52,7 +52,7 @@ exports.createProduct = async (req, res, next) => {
 
     const product = await Product.create(value);
     console.log(req.files, req.body);
-    
+
     if (req.files) {
       const urls = [];
       const files = req.files;
@@ -84,6 +84,13 @@ exports.deleteProduct = async (req, res, next) => {
     });
 
     res.status(200).json({ message: "Delete complete" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.editProduct = async (req, res, next) => {
+  try {
   } catch (err) {
     next(err);
   }
