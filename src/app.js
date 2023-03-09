@@ -12,6 +12,7 @@ const authShopRoute = require("./routes/authShop-route");
 const profileShopRoute = require("./routes/profileShop-route");
 const productShopRoute = require("./routes/productShop-route");
 const orderShopRoute = require("./routes/orderShop-route");
+const chatShopRoute = require("./routes/chatShop-route");
 
 const authUserRoute = require("./routes/authUser-route");
 const profileUserRoute = require("./routes/profileUser-route");
@@ -47,6 +48,7 @@ app.use("/shop/auth", authenticateUser, authShopRoute);
 app.use("/shop/profile", authenticateUser, profileShopRoute);
 app.use("/shop/product/", authenticateUser, productShopRoute);
 app.use("/shop/order", authenticateUser, orderShopRoute);
+app.use("/shop/chat", authenticateUser, chatShopRoute);
 
 app.use(errorMiddleware);
 app.use(notFoundMiddleware);

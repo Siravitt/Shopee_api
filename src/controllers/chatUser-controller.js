@@ -1,5 +1,4 @@
 const { Chat, sequelize, Shop } = require("../models");
-const { QueryTypes } = require("sequelize");
 
 exports.getAllChat = async (req, res, next) => {
   try {
@@ -32,9 +31,19 @@ exports.getChatMessage = async (req, res, next) => {
         userId: req.user.id,
         shopId: req.params.shopId,
       },
-      order: [["createdAt","ASC"]]
+      order: [["createdAt", "ASC"]],
     });
     res.status(200).json({ chats });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.createChat = async (req, res, next) => {
+  try {
+    // req.body.sender = "user";
+    await Chat.create(req.body);
+    res.status(200);
   } catch (err) {
     next(err);
   }

@@ -20,6 +20,9 @@ exports.getAllProduct = async (req, res, next) => {
         },
         {
           model: ProductImage,
+          where: {
+            isMain: true,
+          },
         },
       ],
       attributes: [

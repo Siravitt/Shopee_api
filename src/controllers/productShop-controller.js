@@ -52,7 +52,7 @@ exports.createProduct = async (req, res, next) => {
 
     const product = await Product.create(value);
     console.log(req.files, req.body);
-    
+
     if (req.files) {
       const urls = [];
       const files = req.files;
