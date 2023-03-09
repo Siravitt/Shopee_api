@@ -11,5 +11,5 @@ router.post(
   shopProductController.createProduct,
 );
 router.delete("/delete/:productId", shopProductController.deleteProduct);
-
+router.patch("/edit-Product/:productId", shopProductController.editProduct);
 module.exports = router;
